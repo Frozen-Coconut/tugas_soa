@@ -1,0 +1,22 @@
+{
+  "name": "tugas_soa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo no test case specified",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://..."
+  },
+  "author": "220116874",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.1.2",
+    "nodemon": "^2.0.20",
+    "sequelize": "^6.28.2"
+  }
+}
