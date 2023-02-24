@@ -28,15 +28,15 @@ User.init(
         },
         nama: {
             type: DataTypes.STRING(255),
-            allowNull: true
+            allowNull: false
         },
         alamat: {
             type: DataTypes.STRING(255),
-            allowNull: true
+            allowNull: false
         },
         nomorhp: {
             type: DataTypes.STRING(255),
-            allowNull: true
+            allowNull: false
         }
     },
     {
@@ -76,6 +76,35 @@ Friend.init(
     }
 )
 
+// init Message model
+class Message extends Model {}
+Message.init(
+    {
+        from: {
+            type: DataTypes.STRING(255),
+            allowNull: false
+        },
+        to: {
+            type: DataTypes.STRING(255),
+            allowNull: false
+        },
+        message: {
+            type: DataTypes.STRING(1023),
+            allowNull: false
+        }
+    },
+    {
+        sequelize,
+        paranoid: false,
+        underscored: true,
+        tableName: "messages",
+        name: {
+            singular: "Message",
+            plural: "Message"
+        }
+    }
+)
+
 // init database
 const {userSeed, friendSeed} = require("./dbseed");
 (async () => {
@@ -83,8 +112,12 @@ const {userSeed, friendSeed} = require("./dbseed");
     // sync model with database
     await sequelize.sync({force: false})
     // seed database
-    await User.bulkCreate(userSeed)
-    await Friend.bulkCreate(friendSeed)
+    if (await User.count() == 0) {
+        await User.bulkCreate(userSeed)
+    }
+    if (await Friend.count() == 0) {
+        await Friend.bulkCreate(friendSeed)
+    }
 })()
 
 // import express
@@ -222,6 +255,53 @@ app.delete("/api/friend", async (req, res) => {
     }
     await Friend.destroy({where: {username: username, target: usercari}})
     return res.status(200).json({message: "Berhasil menghapus teman!"})
+})
+
+// init send message route
+app.post("/api/message", async (req, res) => {
+    let {username, password, usercari, message} = req.body
+    if (!username || !password || !usercari || !message) {
+        return res.status(400).json({message: "Body tidak sesuai ketentuan!"})
+    }
+    let user = await User.findOne({where: {username: username}})
+    if (!user) {
+        return res.status(401).json({message: "Username tidak terdaftar!"})
+    }
+    if (password != user.password) {
+        return res.status(401).json({message: "Password salah!"})
+    }
+    let target = await User.findOne({where: {username: usercari}})
+    if (!target) {
+        return res.status(404).json({message: "Usercari tidak ditemukan!"})
+    }
+    let friend = await Friend.findOne({where: {username: username, target: usercari}})
+    if (!friend) {
+        return res.status(401).json({message: "Usercari belum ditambahkan sebagai teman!"})
+    }
+    Message.create({
+        from: username,
+        to: usercari,
+        message: message
+    })
+    return res.status(201).json({message: "Berhasil mengirim pesan!"})
+})
+
+// init view message route
+app.get("/api/message/:username", async (req, res) => {
+    let username = req.params.username
+    let password = req.body.password
+    if (!username || !password) {
+        return res.status(400).json({message: "Body tidak sesuai ketentuan!"})
+    }
+    let user = await User.findOne({where: {username: username}})
+    if (!user) {
+        return res.status(401).json({message: "Username tidak terdaftar!"})
+    }
+    if (password != user.password) {
+        return res.status(401).json({message: "Password salah!"})
+    }
+    let messages = await Message.findAll({where: {from: username}})
+    return res.status(200).json(messages)
 })
 
 // run express
