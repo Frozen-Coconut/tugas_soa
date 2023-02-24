@@ -35,5 +35,43 @@ module.exports = {
             "alamat": "Jalan User 5",
             "nomorhp": "0123456789"
         }
+    ],
+    friendSeed: [
+        {
+            "username": "user1",
+            "target": "user2"
+        },
+        {
+            "username": "user1",
+            "target": "user4"
+        },
+        {
+            "username": "user1",
+            "target": "user5"
+        },
+        {
+            "username": "user2",
+            "target": "user3"
+        },
+        {
+            "username": "user2",
+            "target": "user1"
+        },
+        {
+            "username": "user3",
+            "target": "user4"
+        },
+        {
+            "username": "user3",
+            "target": "user5"
+        },
+        {
+            "username": "user4",
+            "target": "user1"
+        },
+        {
+            "username": "user5",
+            "target": "user4"
+        },
     ]
 }

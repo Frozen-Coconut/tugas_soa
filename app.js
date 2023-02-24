@@ -42,7 +42,7 @@ User.init(
     {
         sequelize,
         paranoid: true,
-        underscored:true,
+        underscored: true,
         tableName: "users",
         name: {
             singular: "User",
@@ -51,14 +51,40 @@ User.init(
     }
 )
 
+// init Friend model
+class Friend extends Model {}
+Friend.init(
+    {
+        username: {
+            type: DataTypes.STRING(255),
+            allowNull: false
+        },
+        target: {
+            type: DataTypes.STRING(255),
+            allowNull: false
+        }
+    },
+    {
+        sequelize,
+        paranoid: false,
+        underscored: true,
+        tableName: "friends",
+        name: {
+            singular: "Friend",
+            plural: "Friend"
+        }
+    }
+)
+
 // init database
-const {userSeed} = require("./dbseed");
+const {userSeed, friendSeed} = require("./dbseed");
 (async () => {
     let temp = undefined
     // sync model with database
     await sequelize.sync({force: false})
     // seed database
     await User.bulkCreate(userSeed)
+    await Friend.bulkCreate(friendSeed)
 })()
 
 // import express
@@ -96,7 +122,7 @@ app.post("/api/login", async (req, res) => {
     }
     let user = await User.findOne({where: {username: username}})
     if (!user) {
-        return res.status(404).json({message: "Username tidak terdaftar!"})
+        return res.status(401).json({message: "Username tidak terdaftar!"})
     }
     if (password != user.password) {
         return res.status(401).json({message: "Password salah!"})
@@ -113,7 +139,7 @@ app.put("/api/user/:username", async (req, res) => {
     }
     let user = await User.findOne({where: {username: username}})
     if (!user) {
-        return res.status(404).json({message: "Username tidak terdaftar!"})
+        return res.status(401).json({message: "Username tidak terdaftar!"})
     }
     if (oldpassword != user.password) {
         return res.status(401).json({message: "Password salah!"})
@@ -124,6 +150,78 @@ app.put("/api/user/:username", async (req, res) => {
     user.password = newpassword
     user.save()
     return res.status(200).json({message: "Behasil mengedit user!"})
+})
+
+// init add friend route
+app.post("/api/friend", async (req, res) => {
+    let {username, password, usercari} = req.body
+    if (!username || !password || !usercari) {
+        return res.status(400).json({message: "Body tidak sesuai ketentuan!"})
+    }
+    let user = await User.findOne({where: {username: username}})
+    if (!user) {
+        return res.status(401).json({message: "Username tidak terdaftar!"})
+    }
+    if (password != user.password) {
+        return res.status(401).json({message: "Password salah!"})
+    }
+    let target = await User.findOne({where: {username: usercari}})
+    if (!target) {
+        return res.status(404).json({message: "Usercari tidak ditemukan!"})
+    }
+    Friend.create({
+        username: username,
+        target: usercari
+    })
+    return res.status(201).json({message: "Berhasil menambah teman!"})
+})
+
+// init view friend route
+app.get("/api/friend/:username", async (req, res) => {
+    let username = req.params.username
+    let password = req.body.password
+    if (!password) {
+        return res.status(400).json({message: "Body tidak sesuai ketentuan!"})
+    }
+    let user = await User.findOne({where: {username: username}})
+    if (!user) {
+        return res.status(401).json({message: "Username tidak terdaftar!"})
+    }
+    if (password != user.password) {
+        return res.status(401).json({message: "Password salah!"})
+    }
+    let friends = await Friend.findAll({where: {username: username}})
+    let result = {}
+    for (let friend of friends) {
+        let temp = await User.findOne({where: {username: friend.target}})
+        result[temp.username] = {
+            nama: temp.nama,
+            alamat: temp.alamat,
+            nomorhp: temp.nomorhp
+        }
+    }
+    return res.status(200).json(result)
+})
+
+// init delete friend route
+app.delete("/api/friend", async (req, res) => {
+    let {username, password, usercari} = req.body
+    if (!username || !password || !usercari) {
+        return res.status(400).json({message: "Body tidak sesuai ketentuan!"})
+    }
+    let user = await User.findOne({where: {username: username}})
+    if (!user) {
+        return res.status(401).json({message: "Username tidak terdaftar!"})
+    }
+    if (password != user.password) {
+        return res.status(401).json({message: "Password salah!"})
+    }
+    let target = await User.findOne({where: {username: usercari}})
+    if (!target) {
+        return res.status(404).json({message: "Usercari tidak ditemukan!"})
+    }
+    await Friend.destroy({where: {username: username, target: usercari}})
+    return res.status(200).json({message: "Berhasil menghapus teman!"})
 })
 
 // run express
