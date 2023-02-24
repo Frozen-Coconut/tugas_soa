@@ -1,0 +1,331 @@
+{
+	"info": {
+		"_postman_id": "a45d21c3-95ec-4645-80fc-1deaa2f96045",
+		"name": "Tugas SOA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24656368"
+	},
+	"item": [
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "nama",
+							"value": "User Baru",
+							"type": "text"
+						},
+						{
+							"key": "alamat",
+							"value": "Jalan User Baru",
+							"type": "text"
+						},
+						{
+							"key": "nomorhp",
+							"value": "0123456789",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/user",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "userbaru",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/login",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit profile",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "nama",
+							"value": "User Baru Updated",
+							"type": "text"
+						},
+						{
+							"key": "alamat",
+							"value": "Jalan User Baru Updated",
+							"type": "text"
+						},
+						{
+							"key": "nomorhp",
+							"value": "9876543210",
+							"type": "text"
+						},
+						{
+							"key": "oldpassword",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "newpassword",
+							"value": "userbaruupdated",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/userbaru",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"userbaru"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add friend",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "usercari",
+							"value": "user1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/friend",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"friend"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "view friend",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "password",
+							"value": "userbaru",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/friend/userbaru",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"friend",
+						"userbaru"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete friend",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "usercari",
+							"value": "user1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/friend",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"friend"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send message",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "userbaru",
+							"type": "text"
+						},
+						{
+							"key": "usercari",
+							"value": "user1",
+							"type": "text"
+						},
+						{
+							"key": "message",
+							"value": "Halo...",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/message",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"message"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "view message",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "password",
+							"value": "userbaru",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "localhost:3000/api/message/userbaru",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"message",
+						"userbaru"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
